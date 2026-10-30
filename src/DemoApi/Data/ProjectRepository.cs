@@ -10,6 +10,7 @@ public interface IProjectRepository
     Task<Project?> GetAsync(int id, CancellationToken ct);
     Task<bool> NameExistsAsync(string name, CancellationToken ct);
     Task<Project> CreateAsync(string name, CancellationToken ct);
+    Task<Project?> RenameAsync(int id, string name, CancellationToken ct);
     Task<bool> DeleteAsync(int id, CancellationToken ct);
 }
 
@@ -51,6 +52,15 @@ public sealed class ProjectRepository(NpgsqlDataSource db) : IProjectRepository
         await using var reader = await cmd.ExecuteReaderAsync(ct);
         await reader.ReadAsync(ct);
         return Map(reader);
+    }
+
+    public async Task<Project?> RenameAsync(int id, string name, CancellationToken ct)
+    {
+        await using var cmd = db.CreateCommand($"UPDATE projects SET name = $2 WHERE id = $1 RETURNING {Columns}");
+        cmd.Parameters.Add(Sql.Param(id, NpgsqlDbType.Integer));
+        cmd.Parameters.Add(Sql.Param(name, NpgsqlDbType.Text));
+        await using var reader = await cmd.ExecuteReaderAsync(ct);
+        return await reader.ReadAsync(ct) ? Map(reader) : null;
     }
 
     public async Task<bool> DeleteAsync(int id, CancellationToken ct)
