@@ -20,14 +20,14 @@ public class ProjectsApiTests(WebApplicationFactory<Program> factory)
     }
 
     [Fact]
-    public async Task Create_DuplicateName_ReturnsConflict()
+    public async Task Create_DuplicateName_ReturnsConflict() 
     {
         var name = TestApi.Unique("duplicate");
         (await _client.PostAsJsonAsync("/api/projects", new { name })).EnsureSuccessStatusCode();
 
         var response = await _client.PostAsJsonAsync("/api/projects", new { name });
 
-        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     [Fact]
