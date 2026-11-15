@@ -1,0 +1,6 @@
+services:
+  api:
+    network_mode: host
+    ports: !reset []
+    environment:
+      ConnectionStrings__Db: "Host=127.0.0.1;Port=5432;Database=demo;Username=demo;Password=${DB_PASSWORD:-demo}"
