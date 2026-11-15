@@ -88,17 +88,18 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # ---------- CD: деплой на Docker Desktop через self-hosted runner ----------
+
+  # ---------- CD: деплой в Linux Codespaces через self-hosted runner ----------
   deploy:
     needs: image
     if: github.ref == 'refs/heads/main'
-    runs-on: self-hosted
+    runs-on: [self-hosted, Linux, X64, demo-api-lr5]
     permissions:
       contents: read
       packages: read
     defaults:
       run:
-        shell: pwsh          # на машине с runner нужен PowerShell 7
+        shell: bash          # Linux runner использует Bash
     env:
       API_IMAGE: ${{ needs.image.outputs.image }}
       API_TAG: ${{ needs.image.outputs.tag }}
