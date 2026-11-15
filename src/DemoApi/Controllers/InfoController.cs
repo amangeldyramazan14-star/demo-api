@@ -13,11 +13,11 @@ public sealed class InfoController(IConfiguration config) : ControllerBase
     /// <response code="200">Версия и хост</response>
     [HttpGet]
     public InfoResponse Get() =>
-        new("DemoApi", config["APP_VERSION"] ?? "dev", Environment.MachineName);
+        new("DemoApi", config["APP_VERSION"] ?? "dev", Environment.MachineName, "hello from CI/CD");
 }
 
 /// <summary>Информация о запущенном сервисе</summary>
 /// <param name="Service">Имя сервиса</param>
 /// <param name="Version">Версия: sha коммита, из которого собран образ, или dev</param>
 /// <param name="Host">Имя хоста — в контейнере это его id</param>
-public sealed record InfoResponse(string Service, string Version, string Host);
+public sealed record InfoResponse(string Service, string Version, string Host, string Message);
